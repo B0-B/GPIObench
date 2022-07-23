@@ -6,4 +6,4 @@ pin = 17
 led = LED(pin)
 
 #blink(led, 1)
-fluorescentTube(led, f_min=40, f_max=60, disturb=0.1, duration=None, width=.55, loopPeriod=2, fadeTime=1.1)
+fluorescentTube(led, f_min=40, f_max=60, disturb=0.12, duration=None, width=.55, loopPeriod=2, fadeTime=1.1)

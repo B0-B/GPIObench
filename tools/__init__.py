@@ -20,9 +20,9 @@ def blink (led, frequency, duration=3, width=0.5):
         led.off()
         sleep(t2)
 
-def blinkFadeIn (led, f_min, f_max, duration):
+def blinkFadeIn (led, f_min, f_max, duration, width = 0.5):
 
-    width = 0.5
+
     T = 0
 
     factor = (f_max - f_min) / duration
@@ -41,9 +41,8 @@ def blinkFadeIn (led, f_min, f_max, duration):
 
         T += interval
 
-def blinkFadeOut (led, f_max, f_min, duration):
+def blinkFadeOut (led, f_max, f_min, duration, width=0.5):
 
-    width = 0.5
     T = 0
 
     factor = (f_max - f_min) / duration
@@ -85,6 +84,7 @@ def fluorescentTube (led, f_min=40, f_max=50, disturb=0.05, duration=None, width
 
                 led.off()
                 sleep(gauss(loopPeriod*(1+disturbation), 0.2*(1+disturbation)))
+                blinkFadeIn(led, f_min/4, f_min, uniform(0, 3))
                 continue
             
 
