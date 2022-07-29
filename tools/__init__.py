@@ -1,7 +1,7 @@
 
 from time import sleep
 from random import gauss, uniform, choice
-
+import math
 
 def blink (led, frequency, duration=3, width=0.5):
 
@@ -128,3 +128,114 @@ def fluorescentTube (led, f_min=40, f_max=50, disturb=0.05, duration=None, width
             t += dt
             if t > T:
                 return
+
+def RGBpulse (rgb_pins, color=[1,1,1], frequency=1, min_value=0.0, max_value=1.0, duration=None):
+    
+    t, T = 0, 1/240
+    global_intensity = 0
+    omega = 2*math.pi*frequency
+    c_cum_inv = 1/sum(color)
+    osc = lambda t: 0.5 * (math.sin(omega*t) + 1) * (max_value-min_value) + min_value
+
+    while True:
+
+        t_pulse, t_wait = global_intensity * T, (1-global_intensity) * T
+
+        t_rgb = [t_pulse*color[0]*c_cum_inv, t_pulse*color[1]*c_cum_inv, t_pulse*color[2]*c_cum_inv]
+        
+        for i in range(3):
+            if rgb_pins[i] != 0:
+                rgb_pins[i].off()
+
+        for i in range(3):
+            sleep(t_rgb[i])
+            rgb_pins[i].on()
+        
+        # oscillate the pulse
+        global_intensity = osc(t)
+        t += T
+
+        if duration and t > duration:
+            return 
+
+        sleep(t_wait)
+
+
+
+def RGBfade (rgb_pins, rgb_frequencies=[.1,.1,.1], frequency=60, duration=None, led_rgb_phase_shift=[0,0,0]):
+
+    '''
+    Varies the r,g and b channels with shift between leds and different frequencies for rgb colors.
+    '''
+
+    # create new led objects which have 3 different potentials relative to ground
+    led_1 = [rgb_pins[0], rgb_pins[1], rgb_pins[2]]
+    led_2 = [rgb_pins[3], rgb_pins[4], rgb_pins[5]]
+
+    # define global frequency and rgb frequencies
+    omega_list = [2 * math.pi * f for f in rgb_frequencies]
+
+    # initialize loop parameters
+    led_rgb_phase_shift = [led_rgb_phase_shift[i] * 2*math.pi for i in range(3)]
+    pulse_width = [0, 0, 0, 0, 0, 0]
+    T = 1/frequency # a single loop time (simulate AC)
+    t = 0
+
+    while True:
+
+        #print(pulse_width)
+
+        # update pulse width of first LED by base frequency
+        # LED 1
+        for i in range(3):
+            pulse_width[i] = (math.sin(omega_list[i] * t) + 1) * 0.5
+        
+        # update the second led analogous but with a color-dep. phase shift in the sine
+        # LED 2
+        for i in range(3):
+            pulse_width[3+i] = (math.sin(omega_list[i] * t + led_rgb_phase_shift[i]) + 1) * 0.5
+
+
+        # determine the current pulse time <= T
+        t_r_1 = pulse_width[0] * T
+        t_g_1 = pulse_width[1] * T
+        t_b_1 = pulse_width[2] * T
+        t_r_2 = pulse_width[3] * T
+        t_g_2 = pulse_width[4] * T
+        t_b_2 = pulse_width[5] * T
+        t_longest = max(pulse_width) * T
+        
+        # switch on both LEDs
+        for led in [led_2]:
+            for i in range(3):
+                led[i].off()
+        
+        # switch off
+        dt = max(t_longest/1000, 0.002)
+        timesteps = int(t_longest/dt)
+        for i in range(timesteps):
+            t_cum = i*dt
+            if t_cum > t_r_1:
+                led_1[0].on()
+            if t_cum > t_g_1:
+                led_1[1].on()
+            if t_cum > t_b_1:
+                led_1[2].on()
+            if t_cum > t_r_2:
+                led_2[0].on()
+            if t_cum > t_g_2:
+                led_2[1].on()
+            if t_cum > t_b_2:
+                led_2[2].on()
+            sleep(dt)
+        
+        
+        # update time
+        t += T
+
+        # check if duration is exceeded, if set.
+        if duration and t > duration:
+            return
+        
+        # sleep the rest of the period
+        sleep(T-t_longest)
