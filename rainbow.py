@@ -9,4 +9,4 @@ pins = [2,3,4,10,9,11]
 leds = [LED(pin) for pin in pins]
 
 #RGBLED(leds[3:], r=0, g=0, b=1)
-RGBfade(leds, rgb_frequencies=[.005,.005,.005], led_rgb_phase_shift=[0.6, 0.2, 0.4], frequency=120)
+RGBfade(leds, rgb_frequencies=[.005,.005,.005], led_rgb_phase_shift=[0.6, 0.2, 0.4], frequency=50)
