@@ -3,6 +3,9 @@ from time import sleep
 from random import gauss, uniform, choice
 import math
 
+
+
+
 def blink (led, frequency, duration=3, width=0.5):
 
     '''
@@ -132,35 +135,34 @@ def fluorescentTube (led, f_min=40, f_max=50, disturb=0.05, duration=None, width
 def RGBpulse (rgb_pins, color=[1,1,1], frequency=1, min_value=0.0, max_value=1.0, duration=None):
     
     t, T = 0, 1/240
-    global_intensity = 0
+    # global_intensity = 0
     omega = 2*math.pi*frequency
-    c_cum_inv = 1/sum(color)
+    # c_cum_inv = 1/sum(color)
     osc = lambda t: 0.5 * (math.sin(omega*t) + 1) * (max_value-min_value) + min_value
 
     while True:
 
-        t_pulse, t_wait = global_intensity * T, (1-global_intensity) * T
-
-        t_rgb = [t_pulse*color[0]*c_cum_inv, t_pulse*color[1]*c_cum_inv, t_pulse*color[2]*c_cum_inv]
         
-        for i in range(3):
-            if rgb_pins[i] != 0:
-                rgb_pins[i].off()
 
-        for i in range(3):
-            sleep(t_rgb[i])
-            rgb_pins[i].on()
+        # t_pulse, t_wait = global_intensity * T, (1-global_intensity) * T
+
+        # t_rgb = [t_pulse*color[0]*c_cum_inv, t_pulse*color[1]*c_cum_inv, t_pulse*color[2]*c_cum_inv]
         
-        # oscillate the pulse
-        global_intensity = osc(t)
+        # for i in range(3):
+        #     if rgb_pins[i] != 0:
+        #         rgb_pins[i].off()
+
+        # for i in range(3):
+        #     sleep(t_rgb[i])
+        #     rgb_pins[i].on()
+        
+        # update the time
         t += T
 
         if duration and t > duration:
             return 
 
         sleep(t_wait)
-
-
 
 def RGBfade (rgb_pins, rgb_frequencies=[.1,.1,.1], frequency=60, duration=None, led_rgb_phase_shift=[0,0,0]):
 
