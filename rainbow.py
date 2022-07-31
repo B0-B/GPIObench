@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 from tools.rgb import RGBLED
-from gpiozero import LED
 
 '''
 RGB led which fades colors like a rainbow.

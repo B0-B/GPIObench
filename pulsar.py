@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from gpiozero import LED, PWMLED
+from gpiozero import PWMLED
 from tools import RGBpulse
 from time import sleep
 

@@ -30,6 +30,13 @@ class RGBLED:
         self.frequencies = [.1,.1,.1]
         self.stop = False
 
+    def color (self, r, g, b):
+
+        f = 1/255
+        c = 1 - np.array([r, g, b]) * f
+        for i in range(3):
+            self.value(c[i], self.colors[i])
+
     def fade (self, frequencies=None, phase=[0,0,0], colors='rgb', loop_frequency=60):
 
         # override internal color frequencies, if provided
@@ -60,6 +67,9 @@ class RGBLED:
             
             # wait
             sleep(T)
+
+        # set the stop switch to False again
+        self.stop = False
             
     def off (self, colors='rgb'):
         
@@ -80,6 +90,17 @@ class RGBLED:
         for col in colors:
             self.LED[col].value = _value
 
+    def white (self, coldness=0):
+
+        # coldness is a parameter from 0 to 1
+
+        color = [
+            255*np.exp(-((coldness-0)/1)**2), 
+            255*np.exp(-((coldness-0.5)/1)**2), 
+            255*np.exp(-((coldness-1)/1)**2)
+        ]
+
+        self.color(*color)
     
 
 
