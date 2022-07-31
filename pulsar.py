@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 from gpiozero import PWMLED
-from tools import RGBpulse
 from time import sleep
 
 pins = [10, 9, 11]

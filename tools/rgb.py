@@ -3,7 +3,7 @@
 from gpiozero import LED, PWMLED
 import numpy as np
 from time import sleep
-
+from os import path
 
 
 class RGBLED:
@@ -29,6 +29,7 @@ class RGBLED:
         # interface parameters for on-the-fly changes
         self.frequencies = [.1,.1,.1]
         self.stop = False
+        self.setSwitch(False)
 
     def color (self, r, g, b):
 
@@ -52,7 +53,7 @@ class RGBLED:
         t, T = 0, 1/loop_frequency
 
         # start loop
-        while not self.stop:
+        while not self.stopRequested():
 
             # update numpy state
             state = 0.5*( np.sin(omega * t + start) + 1 )
@@ -69,8 +70,8 @@ class RGBLED:
             sleep(T)
 
         # set the stop switch to False again
-        self.stop = False
-            
+        self.setSwitch(False)
+
     def off (self, colors='rgb'):
         
         for col in colors:
@@ -81,9 +82,27 @@ class RGBLED:
         for col in colors:
             self.LED[col].off()
 
+    def setSwitch (self, boolean):
+
+        self.stop = boolean
+        with open(path.dirname(__file__) + '/switch.txt', 'w+') as f:
+            if boolean:
+                f.write('1')
+            else:
+                f.write('0')
+
     def stop (self):
 
         self.stop = True
+        with open(path.dirname(__file__) + '/switch.txt', 'w+') as f:
+            f.write(0)
+
+    def stopRequested (self):
+
+        with open(path.dirname(__file__) + '/switch.txt', 'r') as f:
+            if f.read() == '1':
+                return True
+            return False
 
     def value (self, _value, colors='rgb'):
 
