@@ -1,14 +1,13 @@
 from tools.rgb import RGBLED
 from time import sleep
 
-coldness = 0
+coldness = 0.8
 
 pins = (10,9,11)
 RGB = RGBLED(*pins)
 
 RGB.on()
+RGB.white(coldness)
 
-for i in range(100):
-    coldness += 0.01
-    RGB.white(coldness)
-    sleep(0.5)
+while True:
+    sleep(1)

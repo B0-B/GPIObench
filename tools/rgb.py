@@ -29,6 +29,7 @@ class RGBLED:
         # interface parameters for on-the-fly changes
         self.frequencies = [.1,.1,.1]
         self.stop = False
+        self.switchPath = path.dirname(__file__) + '/switch.txt'
         self.setSwitch(False)
 
     def color (self, r, g, b):
@@ -38,7 +39,7 @@ class RGBLED:
         for i in range(3):
             self.value(c[i], self.colors[i])
 
-    def fade (self, frequencies=None, phase=[0,0,0], colors='rgb', loop_frequency=60):
+    def fade (self, frequencies=None, phase=[0,0,0], colors='rgb', duration=None, loop_frequency=60, strength=[1,1,1]):
 
         # override internal color frequencies, if provided
         if frequencies:
@@ -61,11 +62,14 @@ class RGBLED:
             # apply strengths by value and current state
             for i in range(len(colors)):
                 
-                self.value(state[i], colors[i])
+                self.value(strength[i]*state[i], colors[i])
 
             # update time
             t += T
             
+            if duration and t > duration:
+                return 
+
             # wait
             sleep(T)
 
@@ -82,10 +86,14 @@ class RGBLED:
         for col in colors:
             self.LED[col].off()
 
+    def pulse (self, color=(255,255,255), frequency=1, duration=None):
+
+        self.fade((frequency, frequency, frequency), strength=(color[0]/255, color[1]/255, color[2]/255), duration=duration)
+
     def setSwitch (self, boolean):
 
         self.stop = boolean
-        with open(path.dirname(__file__) + '/switch.txt', 'w+') as f:
+        with open(self.switchPath, 'w+') as f:
             if boolean:
                 f.write('1')
             else:
@@ -94,20 +102,37 @@ class RGBLED:
     def stop (self):
 
         self.stop = True
-        with open(path.dirname(__file__) + '/switch.txt', 'w+') as f:
+        with open(self.switchPath, 'w+') as f:
             f.write(0)
 
     def stopRequested (self):
 
-        with open(path.dirname(__file__) + '/switch.txt', 'r') as f:
+        with open(self.switchPath, 'r') as f:
             if f.read() == '1':
                 return True
             return False
 
+    def test (self):
+
+        self.on()
+        coldness = 0
+        for i in range(100):
+            coldness += 0.01
+            self.white(coldness)
+            sleep(0.02)
+
+        for i in range(3):
+            for col in self.colors:
+                self.on(col)
+                sleep(.33)
+                self.off()
+        
+        self.fade(frequencies=[1, 1, 1], phase=[0, 0.3, 0.8], duration=3)
+
     def value (self, _value, colors='rgb'):
 
         for col in colors:
-            self.LED[col].value = _value
+            self.LED[col].value = 1 - _value
 
     def white (self, coldness=0):
 
