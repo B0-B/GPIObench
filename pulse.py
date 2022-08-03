@@ -7,7 +7,7 @@ RGB led pulsating.
 '''
 
 pins = (10,9,11)
-color = (255, 160, 56)
+color = (30, 210, 70)
 
 RGB = RGBLED(*pins)
 RGB.pulse(color=color)

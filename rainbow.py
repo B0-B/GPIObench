@@ -8,4 +8,5 @@ RGB led which fades colors like a rainbow.
 
 pins = (10,9,11)
 RGB = RGBLED(*pins)
-RGB.fade(frequencies=[0.01, 0.01, 0.01], phase=[0, 0.3, 0.8])
+f = 0.05
+RGB.fade(frequencies=[f, f, f], phase=[0, 0.4, 0.8])

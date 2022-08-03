@@ -35,7 +35,7 @@ class RGBLED:
     def color (self, r, g, b):
 
         f = 1/255
-        c = 1 - np.array([r, g, b]) * f
+        c = np.array([r, g, b]) * f
         for i in range(3):
             self.value(c[i], self.colors[i])
 
