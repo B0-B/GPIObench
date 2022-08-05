@@ -5,6 +5,6 @@ from tools.rgb import RGBLED
 Runs a few programs to check LED functionality.
 '''
 
-pins = (10,9,11)
+pins = (2,3,4)
 RGB = RGBLED(*pins)
 RGB.test()

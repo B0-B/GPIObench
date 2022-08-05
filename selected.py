@@ -7,7 +7,7 @@ from time import sleep
 RGB led which randomly picks colors from selected panel.
 '''
 
-pins = (10,9,11)
+pins = (2,3,4)
 RGB = RGBLED(*pins)
 period = 10
 

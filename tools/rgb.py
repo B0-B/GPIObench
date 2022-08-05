@@ -4,6 +4,13 @@ from gpiozero import LED, PWMLED
 import numpy as np
 from time import sleep
 from os import path
+import threading
+
+def thread (func):
+
+    t = threading.Thread(target=func)
+    t.start()
+    return t
 
 
 class RGBLED:

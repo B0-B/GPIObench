@@ -7,7 +7,7 @@ from random import uniform
 RGB led which fades colors like a rainbow.
 '''
 
-pins = (10,9,11)
+pins = (2,3,4)
 RGB = RGBLED(*pins)
 
 RGB.on()
