@@ -4,13 +4,7 @@ from gpiozero import LED, PWMLED
 import numpy as np
 from time import sleep
 from os import path
-import threading
 
-def thread (func):
-
-    t = threading.Thread(target=func)
-    t.start()
-    return t
 
 
 class RGBLED:
@@ -147,7 +141,7 @@ class RGBLED:
 
         color = [
             255*np.exp(-((coldness-0)/1)**2), 
-            255*np.exp(-((coldness-0.5)/1)**2), 
+            200*np.exp(-((coldness-0.5)/1)**2), 
             255*np.exp(-((coldness-1)/1)**2)
         ]
 

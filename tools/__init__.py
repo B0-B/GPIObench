@@ -2,10 +2,19 @@
 from time import sleep
 from random import gauss, uniform, choice
 import math
+import threading
 
 '''
 General tools.
 '''
+
+
+
+def thread (func):
+
+    t = threading.Thread(target=func)
+    t.start()
+    return t
 
 def blink (led, frequency, duration=3, width=0.5):
 
