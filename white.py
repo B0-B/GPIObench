@@ -1,7 +1,7 @@
 from tools.rgb import RGBLED
 from time import sleep
 
-coldness = 0.6
+coldness = 0.9
 
 pins = (2,3,4)
 RGB = RGBLED(*pins)

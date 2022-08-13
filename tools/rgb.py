@@ -4,8 +4,10 @@ from gpiozero import LED, PWMLED
 import numpy as np
 from time import sleep
 from os import path
+from random import uniform
 
-
+def randomColor ():
+    return [uniform(0,1)*255 for i in range(3)]
 
 class RGBLED:
 
@@ -129,6 +131,22 @@ class RGBLED:
                 self.off()
         
         self.fade(frequencies=[1, 1, 1], phase=[0, 0.3, 0.8], duration=3)
+
+    def transition(self, from_color, to_color, duration=1):
+
+        dt = 1/60
+        T = int(duration/dt)
+        colors = [from_color, to_color]
+        for i in range(2):
+            if not type(colors[i]) is  np.ndarray:
+                colors[i] = np.array(colors[i])
+
+        dc_dt = (colors[1]-colors[0])/T
+
+        for t in range(T):
+            c = dc_dt * t + colors[0]
+            self.color(*c)
+            sleep(dt)
 
     def value (self, _value, colors='rgb'):
 
