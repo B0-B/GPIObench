@@ -7,7 +7,7 @@ from os import path
 from random import uniform
 
 def randomColor ():
-    return [uniform(0,1)*255 for i in range(3)]
+    return [np.random.choice(255) for i in range(3)]
 
 class RGBLED:
 
