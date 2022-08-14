@@ -1,4 +1,4 @@
-from tools.rgb import RGBLED, randomColor
+from tools.rgb import RGBLED, randomColor, stopRequested
 from time import sleep
 
 
@@ -16,9 +16,18 @@ rest_duration = 10
 RGB.on()
 RGB.color(*current_color)
 
-while True:
+while not stopRequested():
+
+    # transition to new random color
     sampled_color = randomColor()
+    print('new color:', *sampled_color)
     RGB.transition(current_color, sampled_color, duration=transition_duration)
-    print(*sampled_color)
+    
+    # override current state
     current_color = sampled_color
-    sleep(rest_duration)
+
+    # during rest period frequently check for stop requests
+    for i in range(rest_duration):
+        sleep(1)
+        if stopRequested():
+            quit() 

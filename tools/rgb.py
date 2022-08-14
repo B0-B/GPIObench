@@ -9,6 +9,16 @@ from random import uniform
 def randomColor ():
     return [np.random.choice(255) for i in range(3)]
 
+def stopRequested ():
+    '''
+    A global function for determining the global operating state to link it to stop.py.
+    When stop.py is called in an ext. runtime this function will always return false. 
+    '''
+    with open(path.dirname(__file__) + '/switch.txt', 'r') as f:
+        if f.read() == '1':
+            return True
+        return False
+
 class RGBLED:
 
     '''
