@@ -86,22 +86,26 @@ def gaussian(x, mu, sig):
 
 def colorFade (x):
 
-    c1 = np.array(_redCol)
-    c2 = np.array(_neutralCol)
-    c3 = np.array(_greenCol)
+    return [255*(1-x), 255*x, 50*gaussian(x, .5, .1)]
 
-    mixer = lambda x, mu, c: gaussian(x, mu, .3) * c
+    # c1 = np.array(_redCol)
+    # c2 = np.array(_neutralCol)
+    # c3 = np.array(_greenCol)
 
-    r = mixer(x, 0, c1)
-    y = mixer(x, .5, c2)
-    g = mixer(x, 1, c3)
+    # mixer = lambda x, mu, c: gaussian(x, mu, .3) * c
 
-    col = r + y + g
+    # r = mixer(x, 0, c1)
+    # y = mixer(x, .5, c2)
+    # g = mixer(x, 1, c3)
 
-    for i in range(3):
-        col[i] = np.min([255, col[i]])
+    # col = r + y + g
 
-    return col
+    # print('col', col)
+
+    # for i in range(3):
+    #     col[i] = np.min([255, col[i]])
+    # print('col', col)
+    #return col
 
 def main ():
 
@@ -130,15 +134,16 @@ def main ():
             drifts = [np.log(data[i+1]/data[i]) for i in range(len(data)-1)]
             drift = np.mean(drifts)*100
             vol = np.std(drifts)*100
-            print(drift, vol)
+            #print(drift, vol)
 
             # set LED dynamics using expectation and a sigmoid activation function
             freq = (f_max-f_min)/(1+np.sqrt(-vol/_expectedVolPercentage)) + f_min
             mag = 1/(1+np.exp(-drift/_expectedDriftPercentage))
+
+            print('mag', mag)
             
             # combine magnitude to alter the color strength
             col = colorFade(mag)
-            print('col', col)
 
             # apply settings to LED
             #LED.pulse(color=col, frequency=freq, duration=_update)
