@@ -41,7 +41,7 @@ class RGBLED:
 
         # interface parameters for on-the-fly changes
         self.frequencies = [.1,.1,.1]
-        self.stop = False
+        self.stop_request = False
         self.switchPath = path.dirname(__file__) + '/switch.txt'
         self.setSwitch(False)
 
@@ -105,7 +105,7 @@ class RGBLED:
 
     def setSwitch (self, boolean):
 
-        self.stop = boolean
+        self.stop_request = boolean
         with open(self.switchPath, 'w+') as f:
             if boolean:
                 f.write('1')
@@ -114,9 +114,9 @@ class RGBLED:
 
     def stop (self):
 
-        self.stop = True
+        self.stop_request = True
         with open(self.switchPath, 'w+') as f:
-            f.write(0)
+            f.write('0')
 
     def stopRequested (self):
 

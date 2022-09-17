@@ -3,7 +3,7 @@ from tools import thread
 from time import sleep
 
 pin_1 = (2,3,4)
-pin_2 = (24,23,18)
+pin_2 = (17,27,22)
 f = 0.1
 delay = 0.1
 
