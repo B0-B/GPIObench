@@ -1,8 +1,9 @@
-from gpiozero import MCP3008
+from gpiozero import MCP3008, LED
 from time import sleep
 
 # analog to digital converter
-diode = MCP3008(channel=0, select_pin=10)
+diode = LED(10)
+#diode = MCP3008(channel=0, select_pin=10)
 
 while True:
 
